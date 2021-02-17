@@ -12,6 +12,7 @@ import json
 import unidecode
 import os
 from tqdm import tqdm
+from langdetect import detect
 #%%
 cachedStopWords = stopwords.words('english')
 #%%
@@ -56,6 +57,11 @@ def get_news_topic(path):
     with open(path,encoding='utf-8' ) as json_file:
             data = json.load(json_file)
     text = unidecode.unidecode(data['text'])
+    lang = detect(text)
+    
+    if lang != 'en': # ignore non-english NEWS articles
+        return apple, amazon
+    
     sentences_list = stop_removal(cleaner(text)).split('.')
     
     if len(sentences_list)  == 0:
