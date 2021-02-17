@@ -38,18 +38,22 @@ def get_trading_hour(path):
     with open(path,encoding='utf-8' ) as json_file:
         data = json.load(json_file)
     
-    # print(data['published'])
-    orig_dt = datetime.strptime(data['published'], '%Y-%m-%dT%H:%M:%S.000%z')
-    utc_time_value = orig_dt - orig_dt.utcoffset()
-    utc_dt = utc_time_value.replace(tzinfo=None)
-    utc_dt = hour_rounder(utc_dt)
-    if nyse.open_at_time(early, pd.Timestamp(str(utc_dt), tz = 'utc')):
-        return utc_dt
-    else:
+    # print(data['published'])'
+    if 'published' in data.keys():
         
-        while nyse.open_at_time(early, pd.Timestamp(str(utc_dt), tz = 'utc')) != True:
-            utc_dt = add_one_hours(utc_dt)
-        return utc_dt
+        orig_dt = datetime.strptime(data['published'], '%Y-%m-%dT%H:%M:%S.000%z')
+        utc_time_value = orig_dt - orig_dt.utcoffset()
+        utc_dt = utc_time_value.replace(tzinfo=None)
+        utc_dt = hour_rounder(utc_dt)
+        if nyse.open_at_time(early, pd.Timestamp(str(utc_dt), tz = 'utc')):
+            return utc_dt
+        else:
+            
+            while nyse.open_at_time(early, pd.Timestamp(str(utc_dt), tz = 'utc')) != True:
+                utc_dt = add_one_hours(utc_dt)
+            return utc_dt
+    else:
+        return -1
     
 
 #%%
@@ -61,8 +65,11 @@ for subdir in tqdm(subdirs):
         for file in files:
             path = os.path.join(subdir, file)
             trade_hour = get_trading_hour(path)
-            hours_files.setdefault(str(trade_hour), [])
-            hours_files[str(trade_hour)].append(str(path))
+            if trade_hour == -1:
+                continue
+            else:
+                hours_files.setdefault(str(trade_hour), [])
+                hours_files[str(trade_hour)].append(str(path))
                             
 
 #%%
