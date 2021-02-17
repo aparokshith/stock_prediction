@@ -24,10 +24,13 @@ def add_one_hours(the_time):
     new_time = the_time + timedelta(hours=1)
     return new_time
 
-def hour_rounder(t):
-    # Rounds to nearest hour by adding a timedelta hour if minute >= 30
-    return (t.replace(second=0, microsecond=0, minute=0, hour=t.hour)
-               +timedelta(hours=t.minute//30))
+# def hour_rounder(t):
+#     # Rounds to nearest hour by adding a timedelta hour if minute >= 30
+#     return (t.replace(second=0, microsecond=0, minute=0, hour=t.hour)
+#                +timedelta(hours=t.minute//30))
+
+def hour_rounder(dt):
+    return dt + (datetime.min - dt) % timedelta(minutes=30)
 
 #%%
 def get_trading_hour(path):
