@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Feb 16 13:06:40 2021
 
-@author: aparo
-"""
 # =============================================================================
 # This module does the following
 # 1. converts the time-zone given in NEWS articles and charts data to nearest trading time
