@@ -57,6 +57,10 @@ def get_news_topic(path):
     with open(path,encoding='utf-8' ) as json_file:
             data = json.load(json_file)
     text = unidecode.unidecode(data['text'])
+    
+    if len(text) == 0:
+        return apple, amazon
+    
     lang = detect(text)
     
     if lang != 'en': # ignore non-english NEWS articles
