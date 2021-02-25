@@ -44,3 +44,5 @@ for subdir in tqdm(subdirs):
 #%%
 with open('F:/SWM_project/meta_files/news_topics_usingJSON.pickle', 'wb') as handle:
     pickle.dump(news_topics, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    
+    
