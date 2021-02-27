@@ -101,8 +101,9 @@ def save_pickle(file, path):
     with open(path, 'wb') as handle:
         pickle.dump(file, handle, protocol=pickle.HIGHEST_PROTOCOL)
 #%%
-save_pickle(all_grams, 'F:/SWM_project/meta_files/all_grams' + n_gms +'(column_names).pickle')
-save_pickle(news, 'F:/SWM_project/meta_files/news' + n_gms +'(row_index).pickle')
+save_pickle(all_grams, 'F:/SWM_project/meta_files/all_grams' + str(n_gms) +'(column_names).pickle')
+save_pickle(news, 'F:/SWM_project/meta_files/news' + str(n_gms) +'(row_index).pickle')
+save_pickle(all_occurance, 'F:/SWM_project/meta_files/all_occurance' + str(n_gms) +'(features).pickle')
     
 #%%
 # all_occurance.insert(0, all_grams)
