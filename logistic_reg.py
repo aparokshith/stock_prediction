@@ -18,7 +18,7 @@ from tqdm import tqdm
 import pandas_market_calendars as mcal
 nyse = mcal.get_calendar('NYSE')
 early = nyse.schedule(start_date='2017-07-01', end_date='2020-02-14')
-n_gms = 2
+n_gms = 1
 #%%
 import numpy as np
 from sklearn.linear_model import LogisticRegression
@@ -108,6 +108,7 @@ print("Features reduced from {} to {}".format(len(all_grams),len(new_features)))
 '''
     Stratified Test-Train split
 '''
+
 X_train, X_test, y_train, y_test = train_test_split(X_kbest_features, labels,
                                                     stratify=labels,
                                                     test_size=0.20)
