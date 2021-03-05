@@ -58,7 +58,7 @@ def stop_removal(lists):
 with open('F:/SWM_project/meta_files/news_topics_usingJSON.pickle', 'rb') as handle:
     ticker_news = pickle.load(handle)
 #%%
-n_gms = 2 # Change here for n-gram
+n_gms = 3 # Change here for n-gram
 news_grams = {}
 for news in tqdm(ticker_news['AMZN']):
     
