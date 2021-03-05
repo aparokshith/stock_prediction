@@ -52,7 +52,7 @@ df_chart['date_time'] = df_chart.apply(lambda row: get_date_time(row), axis = 1)
 with open('F:/SWM_project/meta_files/news_topics_usingJSON.pickle', 'rb') as handle:
     ticker_news = pickle.load(handle)
     
-with open('F:/SWM_project/meta_files/trading_news.pickle', 'rb') as handle:
+with open('F:/SWM_project/meta_files/trading_news_fixed.pickle', 'rb') as handle:
     trading_news = pickle.load(handle)
 #%%
 news_dict = {}
@@ -84,7 +84,7 @@ for path in tqdm(news_dict):
         
 #%%
 df_data = pd.DataFrame(text_list, columns = ["news", "direction"])
-df_data.to_csv('F:/SWM_project/meta_files/news_direction.csv',index = False)
+df_data.to_csv('F:/SWM_project/meta_files/news_direction_updated.csv',index = False)
         
 
         
