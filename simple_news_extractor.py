@@ -23,7 +23,7 @@ def get_news_topic(path):
 
 #%%
 news_topics = {}
-subdirs = [x[0] for x in os.walk('F:/SWM_project/News')]                                                                            
+subdirs = [x[0] for x in os.walk('News')]                                                                            
 for subdir in tqdm(subdirs):                                                                                            
     files = os.walk(subdir).__next__()[2]                                                                             
     if (len(files) > 0):                                                                                          
@@ -42,7 +42,7 @@ for subdir in tqdm(subdirs):
                 news_topics['AMZN'].append(str(path))
                 
 #%%
-with open('F:/SWM_project/meta_files/news_topics_usingJSON.pickle', 'wb') as handle:
+with open('meta_files/news_topics_usingJSON.pickle', 'wb') as handle:
     pickle.dump(news_topics, handle, protocol=pickle.HIGHEST_PROTOCOL)
     
     

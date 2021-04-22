@@ -10,6 +10,7 @@ Created on Wed Feb 24 18:48:07 2021
 # =============================================================================
 
 import pandas as pd
+import csv
 #%%
 import json
 import os
@@ -40,21 +41,22 @@ def get_date_time(row):
     return date + " " + row['time']
     
 #%%
+frequency = '60min' # ['', '30min', '']
 colnames = ['date','time','open','high','low','close','volume']
-df_chart = pd.read_csv("F:/SWM_project/CHARTS/AMAZON60.csv", names=colnames)
+df_chart = pd.read_csv("F:/SWM_project/CHARTS/APPLE240.csv", names=colnames) # change file according to frequency
 df_chart['direction'] = df_chart.apply(lambda row: get_direc(row), axis = 1)
 df_chart['date_time'] = df_chart.apply(lambda row: get_date_time(row), axis = 1)
 
 with open('F:/SWM_project/meta_files/news_topics_usingJSON.pickle', 'rb') as handle:
     ticker_news = pickle.load(handle)
     
-with open('F:/SWM_project/meta_files/trading_news.pickle', 'rb') as handle:
+with open('F:/SWM_project/meta_files/240minall_trading_news_fixed.pickle', 'rb') as handle: # change file according to hour threshold
     trading_news = pickle.load(handle)
     
 news_dict = {}
 for key in tqdm(trading_news):
     for file in trading_news[key]:
-        if file in ticker_news['AMZN']:
+        if file in ticker_news['AAPL']:
             news_dict.setdefault(file, key)
 
 date_direction_dict = {}
@@ -62,13 +64,13 @@ for idx, rows in tqdm(df_chart.iterrows(), total=df_chart.shape[0]):
     if nyse.open_at_time(early, pd.Timestamp(rows['date_time'], tz='America/New_York')):
         date_direction_dict.setdefault(rows['date_time'] + ':00', rows['direction'])
 #%%
-with open('F:/SWM_project/meta_files/all_grams' + str(n_gms) +'(column_names).pickle', 'rb') as handle:
+with open('meta_files/AAPL_all_grams' + str(n_gms) +'(column_names).pickle', 'rb') as handle:
     all_grams = pickle.load(handle)
     
-with open('F:/SWM_project/meta_files/news' + str(n_gms) +'(row_index).pickle', 'rb') as handle:
+with open('meta_files/AAPL_news_2018_' + str(n_gms) +'(row_index).pickle', 'rb') as handle:
     news = pickle.load(handle)
     
-with open('F:/SWM_project/meta_files/all_occurance' + str(n_gms) +'(features).pickle', 'rb') as handle:
+with open('meta_files/AAPL_all_occurance_2018_' + str(n_gms) +'(features).pickle', 'rb') as handle:
     all_occurance = pickle.load(handle)
 #%%
 
@@ -91,7 +93,7 @@ for csr in tqdm(features):
     features_array.append(raveled)
 
 #%%
-chi2_features = SelectKBest(chi2, k = 1000) 
+chi2_features = SelectKBest(chi2, k = 1000)
 X_kbest_features = chi2_features.fit_transform(features_array, labels)
 #%%
 #Verify op shape
@@ -103,6 +105,8 @@ for bool, feature in zip(mask, all_grams):
     if bool:
         new_features.append(feature)
 print("Features reduced from {} to {}".format(len(all_grams),len(new_features)))
+
+
 
 #%%
 '''
@@ -124,3 +128,32 @@ clf.fit(X_train,y_train)
 print(clf.score(X_test, y_test))
 predicted = clf.predict(X_test)
 print(classification_report(y_test, predicted))
+
+#%%
+coeffs = np.array(clf.coef_[0]).T
+distin = list(zip(new_features,coeffs))
+res = sorted(distin, key = lambda x: x[1])
+#%%
+filename = 'meta_files/gui_models/logistic_reg_AAPL240.pkl'
+pickle.dump(clf, open(filename, 'wb'))
+
+filename = 'meta_files/gui_models/features_mask_AAPL240_1000.pkl'
+pickle.dump(mask, open(filename, 'wb'))
+#%%
+count=0
+with open('meta_files/gui_models/features_score_top1000AAPL.csv', "w",encoding="utf-8") as output:
+        writer = csv.writer(output, lineterminator='\n')
+        for x,y in res:
+            if y!=0.0:
+                if y > 0:
+                    writer.writerow([x, y,"pro"])
+                else:
+                    writer.writerow([x, y,"anti"])
+            if y == 0:
+                count +=1
+print(count)
+
+
+
+
+

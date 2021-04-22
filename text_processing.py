@@ -99,7 +99,7 @@ def get_news_topic(path):
         
 #%%
 news_topics = {}
-subdirs = [x[0] for x in os.walk('F:/SWM_project/News')]                                                                            
+subdirs = [x[0] for x in os.walk('News')]                                                                            
 for subdir in tqdm(subdirs):                                                                                            
     files = os.walk(subdir).__next__()[2]                                                                             
     if (len(files) > 0):                                                                                          
